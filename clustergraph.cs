@@ -10,13 +10,11 @@ namespace mbr
         public static void AddClusterGraph(ExcelPackage package, ExcelWorksheet sheet, int rows, int columns)
         {
             
-            //this is our number for where we don't care about spend anymore, anything less than this will not be graphed
-            double spendLimit = 100.0;
             // now find the position where $$ is less than the spendLimit value for graphing 
             // (We don't want to graph small numbers)
             Double cellValue = sheet.Cells[rows, columns].GetValue<double>();
             int position = rows;
-            while (cellValue < spendLimit)
+            while (cellValue < Utils.upperSpendLimit)
             {
                 position--;
                 cellValue = sheet.Cells[position,columns].GetValue<double>();

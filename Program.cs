@@ -12,7 +12,9 @@ namespace mbr
         static void Main(string[] args)
         {
           
-            var csvData = Utils.ReadCSV(@"/Users/stufox/Documents/test/costsbyservice.csv");            
+            //var csvData = Utils.ReadCSV(@"/Users/stufox/Documents/test/costsbyservice.csv");   
+            var csvData = Utils.ReadCSV(@"/Users/stufox/Documents/test/costsbylinkedaccount.csv");   
+                     
             List<string> list = csvData.Content;
             int columns = csvData.columns;
             int rows = csvData.rows;
@@ -76,6 +78,10 @@ namespace mbr
                     ChangeGraph.AddChangeGraph(excelPackage,worksheet,rows,columns);
                     ClusterGraph.AddClusterGraph(excelPackage,worksheet,rows,columns);
                 
+                }
+                if (csvData.fileType == "account")
+                {
+                    ChangeGraph.AddChangeGraph(excelPackage,worksheet,rows,columns);
                 }
                 // write the XLSX file to disk
                 var xlFile = new FileInfo(@"/users/stufox/Documents/test/testxl.xlsx");

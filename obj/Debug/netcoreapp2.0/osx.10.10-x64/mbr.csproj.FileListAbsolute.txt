@@ -1,0 +1,13 @@
+/Users/stufox/Documents/code/mbr/bin/Debug/netcoreapp2.0/osx.10.10-x64/libhostpolicy.dylib
+/Users/stufox/Documents/code/mbr/bin/Debug/netcoreapp2.0/osx.10.10-x64/libhostfxr.dylib
+/Users/stufox/Documents/code/mbr/bin/Debug/netcoreapp2.0/osx.10.10-x64/mbr
+/Users/stufox/Documents/code/mbr/bin/Debug/netcoreapp2.0/osx.10.10-x64/mbr.deps.json
+/Users/stufox/Documents/code/mbr/bin/Debug/netcoreapp2.0/osx.10.10-x64/mbr.runtimeconfig.json
+/Users/stufox/Documents/code/mbr/bin/Debug/netcoreapp2.0/osx.10.10-x64/mbr.runtimeconfig.dev.json
+/Users/stufox/Documents/code/mbr/bin/Debug/netcoreapp2.0/osx.10.10-x64/mbr.dll
+/Users/stufox/Documents/code/mbr/bin/Debug/netcoreapp2.0/osx.10.10-x64/mbr.pdb
+/Users/stufox/Documents/code/mbr/obj/Debug/netcoreapp2.0/osx.10.10-x64/mbr.csproj.CoreCompileInputs.cache
+/Users/stufox/Documents/code/mbr/obj/Debug/netcoreapp2.0/osx.10.10-x64/mbr.AssemblyInfoInputs.cache
+/Users/stufox/Documents/code/mbr/obj/Debug/netcoreapp2.0/osx.10.10-x64/mbr.AssemblyInfo.cs
+/Users/stufox/Documents/code/mbr/obj/Debug/netcoreapp2.0/osx.10.10-x64/mbr.dll
+/Users/stufox/Documents/code/mbr/obj/Debug/netcoreapp2.0/osx.10.10-x64/mbr.pdb
