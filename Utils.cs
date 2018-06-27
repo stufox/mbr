@@ -20,7 +20,7 @@ namespace mbr
             var output = new CSVList();
 
             
-            Console.WriteLine("Processing CSV");
+            Console.WriteLine($"Processing CSV {fileName}");
             using (var streamReader = new StreamReader(fileName))
                 {
                     while (!streamReader.EndOfStream)
@@ -45,11 +45,6 @@ namespace mbr
                     }   
                 }
             output.columns = output.Content.Count;
-
-            
-            System.Console.WriteLine($"The array is {output.rows} x {output.columns}");
-
-            
             return output;
 
             

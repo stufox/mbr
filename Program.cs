@@ -40,9 +40,9 @@ namespace mbr
                 var worksheet = excelPackage.Workbook.Worksheets[sheetName];
 
                 int columns = worksheet.Dimension.End.Column;
-                int rows = worksheet.Dimension.End.Row;
+                //int rows = worksheet.Dimension.End.Row;
                 // Post processing - remove some lines.
-                for (int i=rows;i >=1;i--)
+                for (int i=worksheet.Dimension.End.Row;i >=1;i--)
                 {
                     //System.Console.WriteLine(worksheet.Cells[i,1].Value);
                     string serviceName = worksheet.Cells[i,1].Value.ToString().Trim();
@@ -52,10 +52,10 @@ namespace mbr
                         adjustment++;
                     }
                 }
-                Console.WriteLine($"This is the end dimension row  {worksheet.Dimension.End.Row} & column {worksheet.Dimension.End.Column}");
-                rows = rows - adjustment;
+                
+                //rows = rows - adjustment;
                 // sort the $ values - the range is from B2 -> the bottom corner of the sheet
-                using (ExcelRange excelRange = worksheet.Cells[2,1,rows,columns])
+                using (ExcelRange excelRange = worksheet.Cells[2,1,worksheet.Dimension.End.Row,columns])
                 {
                     // sort is zero based, the range isn't so subtract one to find the last column
                     excelRange.Sort(excelRange.Columns-1,Utils.sortDescending);
@@ -64,13 +64,13 @@ namespace mbr
                 // Add the cluster graph
                 if (csvData.fileType == "service")
                 {
-                    ChangeGraph.AddChangeGraph(excelPackage,worksheet,rows,columns);
-                    ClusterGraph.AddClusterGraph(excelPackage,worksheet,rows,columns);
+                    ChangeGraph.AddChangeGraph(excelPackage,worksheet);
+                    ClusterGraph.AddClusterGraph(excelPackage,worksheet,worksheet.Dimension.End.Row,columns);
                 
                 }
                 if (csvData.fileType == "account")
                 {
-                    ChangeGraph.AddChangeGraph(excelPackage,worksheet,rows,columns);
+                    ChangeGraph.AddChangeGraph(excelPackage,worksheet);
                 }
                 // write the XLSX file to disk
                 var xlFile = new FileInfo(file.FullName.Replace(".csv",".xlsx"));

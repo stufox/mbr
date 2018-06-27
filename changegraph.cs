@@ -10,23 +10,32 @@ namespace mbr
     public static class ChangeGraph
     {
 
-        public static void AddChangeGraph(ExcelPackage package, ExcelWorksheet inputsheet, int rows, int columns)
+        public static void AddChangeGraph(ExcelPackage package, ExcelWorksheet inputsheet) 
         {
+            string sheetName = "Change";
             // Copy the existing worksheet to a new one as we need to make changes
-            ExcelWorksheet sheet = package.Workbook.Worksheets.Copy(inputsheet.Name,"Change");
+            ExcelWorksheet sheet = package.Workbook.Worksheets.Copy(inputsheet.Name,sheetName);
             // Add a new column called Change, and then add a formula into each cell to calculate the change
             // formula is typically M2-L2 or something like that.
-            sheet.Cells[1,columns+1].Value = "Change";
+            // NOTE TO SELF: I READ THE COLUMNS & ROWS VALUE AND ASSIGN THEM TO NEW VARIABLES BECAUSE SHIT GOT WEIRD WHEN I USED THEM DIRECTLY
+            int columns = sheet.Dimension.End.Column+1;
+            int rows = sheet.Dimension.End.Row;
+            sheet.Cells[1,columns].Value = "Change";
+            
+            
             for (int i=2;i<=rows;i++)
             {
-                var thisMonthCell = sheet.Cells[i,columns].Address;
-                var lastMonthCell = sheet.Cells[i,columns-1].Address;
-                sheet.Cells[i,columns+1].Formula = $"{thisMonthCell}-{lastMonthCell}";
-                sheet.Cells[i,columns+1].Style.Numberformat.Format = "\"$\"#,##0.00";
+                var thisMonthCell = sheet.Cells[i,columns-1].Address;
+                var lastMonthCell = sheet.Cells[i,columns-2].Address;
+                sheet.Cells[i,columns].Formula = $"{thisMonthCell}-{lastMonthCell}";
+                sheet.Cells[i,columns].Style.Numberformat.Format = "\"$\"#,##0.00";
+            
             }     
+            
             sheet.Calculate();
+            
             // Sort from highest to lowest.
-            using (ExcelRange excelRange = sheet.Cells[1,1,rows,columns+1])
+            using (ExcelRange excelRange = sheet.Cells[1,1,rows,columns])
             {
                 // sort is zero based, the range isn't so be careful
                 // also remember that you're sorting the range, not the entire sheet
@@ -40,7 +49,7 @@ namespace mbr
             {
                 double cellValue;
 
-                Double.TryParse(sheet.Cells[i,columns+1].Value.ToString(), out cellValue);
+                Double.TryParse(sheet.Cells[i,columns].Value.ToString(), out cellValue);
                 if (cellValue < Utils.upperSpendLimit && cellValue > Utils.lowerSpendLimit )
                 {
                     adjustment++;
@@ -53,9 +62,9 @@ namespace mbr
             // things go sideways. So re-enter the formulas to get it to be sorted and correct.
             for (int i=2;i<=rows;i++)
             {
-                var thisMonthCell = sheet.Cells[i,columns].Address;
-                var lastMonthCell = sheet.Cells[i,columns-1].Address;
-                sheet.Cells[i,columns+1].Formula = $"{thisMonthCell}-{lastMonthCell}";
+                var thisMonthCell = sheet.Cells[i,columns-1].Address;
+                var lastMonthCell = sheet.Cells[i,columns-2].Address;
+                sheet.Cells[i,columns].Formula = $"{thisMonthCell}-{lastMonthCell}";
 
             }  
             
@@ -68,10 +77,10 @@ namespace mbr
             // because of how we want this to display our label range stays constant as the header cell for the change column (should be "Change")
             for (int i=2;i<=rows;i++)
             {
-                var valueRange = ExcelRange.GetAddress(i,columns+1);
-                var labelRange = ExcelRange.GetAddress(1,columns+1);
+                var valueRange = ExcelRange.GetAddress(i,columns);
+                var labelRange = ExcelRange.GetAddress(1,columns);
                 var series = chart.Series.Add(valueRange,labelRange);
-                series.HeaderAddress= new ExcelAddress($"'Change'!A{i}");
+                series.HeaderAddress= new ExcelAddress($"'{sheetName}'!A{i}");
             }
 
             //Formatting
