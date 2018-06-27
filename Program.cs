@@ -9,50 +9,38 @@ namespace mbr
 {
     class Program
     {
-        static void Main(string[] args)
+        const string sheetName = "Spend";
+        static int Main(string[] args)
         {
           
-            //var csvData = Utils.ReadCSV(@"/Users/stufox/Documents/test/costsbyservice.csv");   
-            var csvData = Utils.ReadCSV(@"/Users/stufox/Documents/test/costsbylinkedaccount.csv");   
-                     
-            List<string> list = csvData.Content;
-            int columns = csvData.columns;
-            int rows = csvData.rows;
+            if (args.Length ==0)
+            {
+                System.Console.WriteLine("Need to provide an input path on the command line");
+                return 1;
+            }
 
+            var dir = new DirectoryInfo(args[0]);
+            if (dir.Exists)
+            { 
+            var files = dir.GetFiles("*.csv");
+            foreach (var file in files)
+            {
+              
+            var csvData = Utils.ReadCSV(file.FullName);   
+            /*int columns = csvData.columns;
+            int rows = csvData.rows; */
+            
             
             // create the output array
             using (var excelPackage = new ExcelPackage())
             {
                 int adjustment=0;
-                var worksheet = excelPackage.Workbook.Worksheets.Add("Spend");
-                for (int i=0;i<columns;i++)
-                {
-                    var splitLine = list[i].Split(",");
-                    for (int j=0;j<rows;j++)
-                    {
-                        // note that excel cell references are one based, not zero based so add one to every reference
-                        if (i==0)
-                        {
-                            worksheet.Cells[j+1,i+1].Value = splitLine[j];
-                        }                       
-                        if ((j==0) && (i>0))
-                        {
-                            // Header row from B1 onwards gets formatted as date
-                            worksheet.Cells[j+1,i+1].Value = DateTime.Parse(splitLine[j]);
-                            worksheet.Cells[j+1,i+1].Style.Numberformat.Format = "mmm-yy";                           
-                        }
-                        if ((j>0)&&(i>0))
-                        {     
-                             // any empty cells get a zero in it to make the sheet look nicer
-                            worksheet.Cells[j+1,i+1].Value = Convert.ToDecimal(String.IsNullOrEmpty(splitLine[j]) ? "0" : splitLine[j]); 
-                            // set the currency format on the cells - note that $ MUST be enclosed in " " or otherwise it doesn't work properly          
-                            worksheet.Cells[j+1,i+1].Style.Numberformat.Format = "\"$\"#,##0.00";
-                            worksheet.Cells[j+1,i+1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
-                        }                      
-                    }
-                    
+                Utils.TransposeAndClean(excelPackage,sheetName,csvData);
+                
+                var worksheet = excelPackage.Workbook.Worksheets[sheetName];
 
-                }
+                int columns = worksheet.Dimension.End.Column;
+                int rows = worksheet.Dimension.End.Row;
                 // Post processing - remove some lines.
                 for (int i=rows;i >=1;i--)
                 {
@@ -64,6 +52,7 @@ namespace mbr
                         adjustment++;
                     }
                 }
+                Console.WriteLine($"This is the end dimension row  {worksheet.Dimension.End.Row} & column {worksheet.Dimension.End.Column}");
                 rows = rows - adjustment;
                 // sort the $ values - the range is from B2 -> the bottom corner of the sheet
                 using (ExcelRange excelRange = worksheet.Cells[2,1,rows,columns])
@@ -84,11 +73,18 @@ namespace mbr
                     ChangeGraph.AddChangeGraph(excelPackage,worksheet,rows,columns);
                 }
                 // write the XLSX file to disk
-                var xlFile = new FileInfo(@"/users/stufox/Documents/test/testxl.xlsx");
+                var xlFile = new FileInfo(file.FullName.Replace(".csv",".xlsx"));
                 excelPackage.SaveAs(xlFile);
+                
             }
-
-
+            }
+            
+            }
+            else
+            {
+                System.Console.WriteLine($"Directory {dir.FullName} does not exist");
+            }
+            return 0;
         }
     }
 }
