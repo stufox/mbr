@@ -65,7 +65,7 @@ namespace mbr
                 if (csvData.fileType == "service")
                 {
                     ChangeGraph.AddChangeGraph(excelPackage,worksheet);
-                    ClusterGraph.AddClusterGraph(excelPackage,worksheet,worksheet.Dimension.End.Row,columns);
+                    ClusterGraph.AddClusterGraph(excelPackage,worksheet);
                 
                 }
                 if (csvData.fileType == "account")
