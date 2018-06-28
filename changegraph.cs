@@ -17,11 +17,14 @@ namespace mbr
             ExcelWorksheet sheet = package.Workbook.Worksheets.Copy(inputsheet.Name,sheetName);
             // Add a new column called Change, and then add a formula into each cell to calculate the change
             // formula is typically M2-L2 or something like that.
-            // NOTE TO SELF: I READ THE COLUMNS & ROWS VALUE AND ASSIGN THEM TO NEW VARIABLES BECAUSE SHIT GOT WEIRD WHEN I USED THEM DIRECTLY
+
             int columns = sheet.Dimension.End.Column+1;
             int rows = sheet.Dimension.End.Row;
             sheet.Cells[1,columns].Value = "Change";
-            
+
+
+             // NOTE TO SELF: You have to use a variable that won't change when you're adding entries to a spreadsheet 
+            // If you just refer to the end of the spreadsheet, that tends to move when you add stuff.           
             
             for (int i=2;i<=rows;i++)
             {
@@ -35,7 +38,7 @@ namespace mbr
             sheet.Calculate();
             
             // Sort from highest to lowest.
-            using (ExcelRange excelRange = sheet.Cells[1,1,rows,columns])
+            using (ExcelRange excelRange = sheet.Cells[1,1,sheet.Dimension.End.Row,sheet.Dimension.End.Column])
             {
                 // sort is zero based, the range isn't so be careful
                 // also remember that you're sorting the range, not the entire sheet
@@ -43,27 +46,26 @@ namespace mbr
             }
 
             // Now remove any rows that are <$100 & >-$100
-            // Track how many rows we're removing so we can still maintain how many rows there are
-            int adjustment =0;
-            for (int i=rows;i>=2;i--)
+
+            for (int i=sheet.Dimension.End.Row;i>=2;i--)
             {
                 double cellValue;
 
-                Double.TryParse(sheet.Cells[i,columns].Value.ToString(), out cellValue);
+                Double.TryParse(sheet.Cells[i,sheet.Dimension.End.Column].Value.ToString(), out cellValue);
                 if (cellValue < Utils.upperSpendLimit && cellValue > Utils.lowerSpendLimit )
                 {
-                    adjustment++;
+
                     sheet.DeleteRow(i);
                 }
             }
-            rows = rows - adjustment;
+
             // This might be weird, but when you have done a sort on a column with formulas, the sort is "correct"
             // but the formulas in the cells still refer to their source cells. So if you do anything like a recalculate or a sort in Excel
             // things go sideways. So re-enter the formulas to get it to be sorted and correct.
-            for (int i=2;i<=rows;i++)
+            for (int i=2;i<=sheet.Dimension.End.Row;i++)
             {
-                var thisMonthCell = sheet.Cells[i,columns-1].Address;
-                var lastMonthCell = sheet.Cells[i,columns-2].Address;
+                var thisMonthCell = sheet.Cells[i,sheet.Dimension.End.Column-1].Address;
+                var lastMonthCell = sheet.Cells[i,sheet.Dimension.End.Column-2].Address;
                 sheet.Cells[i,columns].Formula = $"{thisMonthCell}-{lastMonthCell}";
 
             }  
@@ -75,10 +77,10 @@ namespace mbr
             
             // Add the values from each row as a separate series - this is the same as graphing the data in one lump and clicking "Switch row/column" in Excel.
             // because of how we want this to display our label range stays constant as the header cell for the change column (should be "Change")
-            for (int i=2;i<=rows;i++)
+            for (int i=2;i<=sheet.Dimension.End.Row;i++)
             {
-                var valueRange = ExcelRange.GetAddress(i,columns);
-                var labelRange = ExcelRange.GetAddress(1,columns);
+                var valueRange = ExcelRange.GetAddress(i,sheet.Dimension.End.Column);
+                var labelRange = ExcelRange.GetAddress(1,sheet.Dimension.End.Column);
                 var series = chart.Series.Add(valueRange,labelRange);
                 series.HeaderAddress= new ExcelAddress($"'{sheetName}'!A{i}");
             }
