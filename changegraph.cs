@@ -73,7 +73,7 @@ namespace mbr
             // Insert our clustered column chart
             var chart = sheet.Drawings.AddChart("Chart",eChartType.ColumnClustered);
 
-            chart.SetSize(1000,800);
+            chart.SetSize(Utils.chartWidth,Utils.chartHeight);
             
             // Add the values from each row as a separate series - this is the same as graphing the data in one lump and clicking "Switch row/column" in Excel.
             // because of how we want this to display our label range stays constant as the header cell for the change column (should be "Change")
@@ -88,8 +88,8 @@ namespace mbr
             //Formatting
             chart.XAxis.Title.Text ="";
             chart.Title.Text="";
-            chart.YAxis.Font.Size = 9;
-            chart.XAxis.Font.Size = 9;
+            chart.YAxis.Font.Size = Utils.defaultFontSize;
+            chart.XAxis.Font.Size = Utils.defaultFontSize;
             chart.RoundedCorners = false;
             chart.Style = Utils.chartStyle;
 

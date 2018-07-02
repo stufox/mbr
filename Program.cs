@@ -9,10 +9,11 @@ namespace mbr
 {
     class Program
     {
-        const string sheetName = "Spend";
+        //const string sheetName = "Spend";
         static int Main(string[] args)
         {
           
+            string sheetName = "Raw";
             if (args.Length ==0)
             {
                 System.Console.WriteLine("Need to provide an input path on the command line");
@@ -27,8 +28,7 @@ namespace mbr
             {
               
             var csvData = Utils.ReadCSV(file.FullName);   
-            /*int columns = csvData.columns;
-            int rows = csvData.rows; */
+
             
             
             // create the output array
@@ -40,7 +40,7 @@ namespace mbr
                 var worksheet = excelPackage.Workbook.Worksheets[sheetName];
 
                 int columns = worksheet.Dimension.End.Column;
-                //int rows = worksheet.Dimension.End.Row;
+
                 // Post processing - remove some lines.
                 for (int i=worksheet.Dimension.End.Row;i >=1;i--)
                 {
@@ -52,8 +52,7 @@ namespace mbr
                         adjustment++;
                     }
                 }
-                
-                //rows = rows - adjustment;
+
                 // sort the $ values - the range is from B2 -> the bottom corner of the sheet
                 using (ExcelRange excelRange = worksheet.Cells[2,1,worksheet.Dimension.End.Row,columns])
                 {
@@ -64,14 +63,21 @@ namespace mbr
                 // Add the cluster graph
                 if (csvData.fileType == "service")
                 {
-                    ChangeGraph.AddChangeGraph(excelPackage,worksheet);
+                    //ChangeGraph.AddChangeGraph(excelPackage,worksheet);
                     ClusterGraph.AddClusterGraph(excelPackage,worksheet);
                 
+
                 }
                 if (csvData.fileType == "account")
                 {
-                    ChangeGraph.AddChangeGraph(excelPackage,worksheet);
+                    
                 }
+                ChangeGraph.AddChangeGraph(excelPackage,worksheet);
+                Linegraph.InsertLineGraph(excelPackage,worksheet);
+                Top20Table.AddTables(excelPackage,worksheet);
+                Top10Table.AddTables(excelPackage,worksheet);
+                Top20Percent.AddTables(excelPackage,worksheet);
+
                 // write the XLSX file to disk
                 var xlFile = new FileInfo(file.FullName.Replace(".csv",".xlsx"));
                 excelPackage.SaveAs(xlFile);

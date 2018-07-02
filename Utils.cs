@@ -14,6 +14,9 @@ namespace mbr
         public const double upperSpendLimit = 100.0;
         public const double lowerSpendLimit = -100.0;
         public const int topN = 5;
+        public const int chartHeight = 800;
+        public const int chartWidth = 1000;
+        public const int defaultFontSize =9;
         public static CSVList ReadCSV(string fileName)
         {
             
@@ -76,13 +79,15 @@ namespace mbr
                         {     
                              // any empty cells get a zero in it to make the sheet look nicer
                             worksheet.Cells[j+1,i+1].Value = Convert.ToDecimal(String.IsNullOrEmpty(splitLine[j]) ? "0" : splitLine[j]); 
-                            // set the currency format on the cells - note that $ MUST be enclosed in " " or otherwise it doesn't work properly          
+                            // set the currency format on the cells - note that $ MUST be enclosed in "" or otherwise it doesn't work properly          
                             worksheet.Cells[j+1,i+1].Style.Numberformat.Format = "\"$\"#,##0.00";
                             worksheet.Cells[j+1,i+1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
                         }                      
                     }
         }
         }
+
+
         public class CSVList
         {
            
