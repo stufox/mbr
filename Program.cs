@@ -63,8 +63,8 @@ namespace mbr
                 // Add the cluster graph
                 if (csvData.fileType == "service")
                 {
-                    //ChangeGraph.AddChangeGraph(excelPackage,worksheet);
-                    ClusterGraph.AddClusterGraph(excelPackage,worksheet);
+                    
+
                 
 
                 }
@@ -72,6 +72,7 @@ namespace mbr
                 {
                     
                 }
+                ClusterGraph.AddClusterGraph(excelPackage,worksheet);
                 ChangeGraph.AddChangeGraph(excelPackage,worksheet);
                 Linegraph.InsertLineGraph(excelPackage,worksheet);
                 Top20Table.AddTables(excelPackage,worksheet);
