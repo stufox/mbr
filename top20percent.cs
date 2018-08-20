@@ -11,7 +11,7 @@ namespace mbr
             string sheetname = "Top20percent";
             var sheet = package.Workbook.Worksheets.Copy(inputsheet.Name,sheetname);
 
-                        // Add a new column for calculating change in $
+            // Add a new column for calculating change in $
             int columns = sheet.Dimension.End.Column+1;
             sheet.Cells[1,columns].Value = "Change ($)";
             for (int i=2;i<=sheet.Dimension.End.Row;i++)
@@ -30,8 +30,22 @@ namespace mbr
             {
                 var changeCell = sheet.Cells[i,columns-1].Address;
                 //var thisMonthCell = sheet.Cells[i,columns-1].Address;
+                // bugfix July 18
+                // Need to not do a divide by zero error
+                // So check for last month cell being zero
+                
+
                 var lastMonthCell = sheet.Cells[i,columns-3].Address;
-                sheet.Cells[i,columns].Formula = $"{changeCell}/{lastMonthCell}%";
+                if (sheet.Cells[lastMonthCell].GetValue<double>() != 0) 
+                {
+                    sheet.Cells[i,columns].Formula = $"{changeCell}/{lastMonthCell}%";
+
+                }
+                else
+                {
+                    sheet.Cells[i,columns].Value = 0.0;
+                    
+                }
                 sheet.Cells[i,columns].Style.Numberformat.Format = "0.00";
             }
             sheet.Calculate();
@@ -57,10 +71,11 @@ namespace mbr
             for (int i=2;i<=sheet.Dimension.End.Row;i++)
             {
                 var changeCell = sheet.Cells[i,columns-1].Address;
-               
                 var lastMonthCell = sheet.Cells[i,columns-3].Address;
-                sheet.Cells[i,columns].Formula = $"{changeCell}/{lastMonthCell}%";
-                sheet.Cells[i,columns].Style.Numberformat.Format = "0.00";
+
+                    sheet.Cells[i,columns].Formula = $"{changeCell}/{lastMonthCell}%";
+                    sheet.Cells[i,columns].Style.Numberformat.Format = "0.00";
+
             }
             sheet.Calculate();
 
@@ -68,7 +83,7 @@ namespace mbr
 
 
             // delete all rows past row 21
-             for (int i=sheet.Dimension.End.Row;i>21;i--)
+            for (int i=sheet.Dimension.End.Row;i>21;i--)
             {
                 sheet.DeleteRow(i);
             }
@@ -80,8 +95,8 @@ namespace mbr
             {
                 sheet.DeleteColumn(2);
             }
-            
-
+            //uncomment this line on Windows
+            //sheet.Cells.AutoFitColumns(0);
 
         }
 
