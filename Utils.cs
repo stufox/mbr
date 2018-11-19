@@ -73,16 +73,21 @@ namespace mbr
                         {
                             // Header row from B1 onwards gets formatted as date
                             worksheet.Cells[j+1,i+1].Value = DateTime.Parse(splitLine[j]);
-                            worksheet.Cells[j+1,i+1].Style.Numberformat.Format = "mmm-yy";                           
+                            worksheet.Cells[j+1,i+1].Style.Numberformat.Format = "mmm-yy"; 
+                            worksheet.Cells[j+1,i+1].Style.HorizontalAlignment =  OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;                           
                         }
                         if ((j>0)&&(i>0))
                         {     
-                             // any empty cells get a zero in it to make the sheet look nicer
+                            // any empty cells get a zero in it to make the sheet look nicer
                             worksheet.Cells[j+1,i+1].Value = Convert.ToDecimal(String.IsNullOrEmpty(splitLine[j]) ? "0" : splitLine[j]); 
                             // set the currency format on the cells - note that $ MUST be enclosed in "" or otherwise it doesn't work properly          
                             worksheet.Cells[j+1,i+1].Style.Numberformat.Format = "\"$\"#,##0.00";
                             worksheet.Cells[j+1,i+1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Right;
-                        }                      
+                        }   
+                        
+                        //Align all cells in the middle
+                        worksheet.Cells[j+1,i+1].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                        
                     }
         }
         }
@@ -90,7 +95,6 @@ namespace mbr
 
         public class CSVList
         {
-           
             public CSVList()
             {
                 rows =0;

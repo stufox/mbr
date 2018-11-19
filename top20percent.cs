@@ -14,18 +14,23 @@ namespace mbr
             // Add a new column for calculating change in $
             int columns = sheet.Dimension.End.Column+1;
             sheet.Cells[1,columns].Value = "Change ($)";
+            sheet.Cells[1,columns].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+            sheet.Cells[1,columns].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
             for (int i=2;i<=sheet.Dimension.End.Row;i++)
             {
                 var thisMonthCell = sheet.Cells[i,columns-1].Address;
                 var lastMonthCell = sheet.Cells[i,columns-2].Address;
                 sheet.Cells[i,columns].Formula = $"{thisMonthCell}-{lastMonthCell}";
                 sheet.Cells[i,columns].Style.Numberformat.Format = "\"$\"#,##0.00";
+                sheet.Cells[i,columns].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
             }
             sheet.Calculate();
 
             // add a new column for calcuating change in %
             columns = sheet.Dimension.End.Column+1;
             sheet.Cells[1,columns].Value = "Change (%)";
+            sheet.Cells[1,columns].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+            sheet.Cells[1,columns].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
             for (int i=2;i<=sheet.Dimension.End.Row;i++)
             {
                 var changeCell = sheet.Cells[i,columns-1].Address;
@@ -47,6 +52,7 @@ namespace mbr
                     
                 }
                 sheet.Cells[i,columns].Style.Numberformat.Format = "0.00";
+                sheet.Cells[i,columns].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
             }
             sheet.Calculate();
 
