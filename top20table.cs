@@ -54,6 +54,8 @@ namespace mbr
             }
             sheet.Calculate();
 
+            sheet.Cells.AutoFitColumns();
+
         }
 
     }

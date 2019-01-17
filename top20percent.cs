@@ -101,8 +101,8 @@ namespace mbr
             {
                 sheet.DeleteColumn(2);
             }
-            //uncomment this line on Windows
-            //sheet.Cells.AutoFitColumns(0);
+            
+            sheet.Cells.AutoFitColumns();
 
         }
 
