@@ -54,7 +54,6 @@ namespace mbr
             }
             sheet.Calculate();
 
-
         }
 
     }

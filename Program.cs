@@ -12,7 +12,7 @@ namespace mbr
         //const string sheetName = "Spend";
         static int Main(string[] args)
         {
-          
+            
             string sheetName = "Raw";
             if (args.Length ==0)
             {
@@ -26,8 +26,7 @@ namespace mbr
             var files = dir.GetFiles("*.csv");
             foreach (var file in files)
             {
-              
-            var csvData = Utils.ReadCSV(file.FullName);   
+                var csvData = Utils.ReadCSV(file.FullName);   
 
             
             
@@ -61,17 +60,7 @@ namespace mbr
                 }
                 
                 // Add the cluster graph
-                if (csvData.fileType == "service")
-                {
-                    
 
-                
-
-                }
-                if (csvData.fileType == "account")
-                {
-                    
-                }
                 ClusterGraph.AddClusterGraph(excelPackage,worksheet);
                 ChangeGraph.AddChangeGraph(excelPackage,worksheet);
                 Linegraph.InsertLineGraph(excelPackage,worksheet);

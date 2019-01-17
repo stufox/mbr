@@ -23,7 +23,7 @@ namespace mbr
             sheet.Cells[1,columns].Value = "Change";
 
 
-             // NOTE TO SELF: You have to use a variable that won't change when you're adding entries to a spreadsheet 
+            // NOTE TO SELF: You have to use a variable that won't change when you're adding entries to a spreadsheet 
             // If you just refer to the end of the spreadsheet, that tends to move when you add stuff.           
             
             for (int i=2;i<=rows;i++)

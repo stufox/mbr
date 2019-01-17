@@ -15,7 +15,7 @@ namespace mbr
             {
                 sheet.DeleteRow(i);
             }
-            
+            sheet.Cells.AutoFitColumns();
 
 
         }
