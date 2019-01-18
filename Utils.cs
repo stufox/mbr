@@ -28,10 +28,8 @@ namespace mbr
                         var line = streamReader.ReadLine();
                         if ((!line.StartsWith("Service Total",StringComparison.CurrentCultureIgnoreCase)) && (!line.StartsWith("LinkedAccount Total",StringComparison.CurrentCultureIgnoreCase)))
                         {
-                            var newLine = line.Replace("($)","");
-                            output.Content.Add(newLine);
-                            var strings = line.Split(",");
-                            output.rows = strings.Length;
+                            output.Content.Add(line.Replace("($)",""));
+                            output.rows = (line.Split(",")).Length;
                         }
                     }   
                 }
