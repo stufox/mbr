@@ -69,6 +69,22 @@ namespace mbr
                     }
                     
             }
+            for (int i=worksheet.Dimension.End.Row;i >=1;i--)
+                {
+                    //System.Console.WriteLine(worksheet.Cells[i,1].Value);
+                    string serviceName = worksheet.Cells[i,1].Value.ToString().Trim();
+                    if (String.Equals(serviceName, "Total cost") || (String.Equals(serviceName,"Premium Support"))|| (String.Equals(serviceName,"Tax"))||(String.Equals(serviceName,"Refund")))
+                    {
+                        worksheet.DeleteRow(i);
+                    }
+                }
+
+                // sort the $ values - the range is from B2 -> the bottom corner of the sheet
+                using (ExcelRange excelRange = worksheet.Cells[2,1,worksheet.Dimension.End.Row,worksheet.Dimension.End.Column])
+                {
+                    // sort is zero based, the range isn't so subtract one to find the last column
+                    excelRange.Sort(excelRange.Columns-1,Utils.sortDescending);
+                }
             // Align all cells in the middle
             worksheet.Cells[1,1,worksheet.Dimension.Rows,worksheet.Dimension.Columns].Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
             // Format header dates
