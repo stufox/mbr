@@ -30,7 +30,7 @@ namespace mbr
             barChart.SetSize(1000,800);
 
                 
-            // Notes:   for Series.Add() first series is values - in this case will be Bx to Mx
+            // Notes:   for Series.Add() first series is values - in this case will be Bx to <some other letter>x
             // second series is labels for X Axis - should be just B1 to M1
             for (int i=2;i<=position;i++)
             {
