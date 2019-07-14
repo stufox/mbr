@@ -9,7 +9,6 @@ namespace mbr
 {
     class Program
     {
-        //const string sheetName = "Spend";
         static int Main(string[] args)
         {
             
@@ -28,27 +27,28 @@ namespace mbr
                 {
                     var csvData = Utils.ReadCSV(file.FullName);   
 
-            
-            
-                    // create the output array
-                    using (var excelPackage = new ExcelPackage())
+                    if (csvData.columns > 0)
                     {
-                        Utils.TransposeAndClean(excelPackage,sheetName,csvData);
+                        // create the output array
+                        using (var excelPackage = new ExcelPackage())
+                        {
+                            Utils.TransposeAndClean(excelPackage,sheetName,csvData);
                 
-                        var worksheet = excelPackage.Workbook.Worksheets[sheetName];
+                            var worksheet = excelPackage.Workbook.Worksheets[sheetName];
                 
-                        // Add the graphs/tables
+                            // Add the graphs/tables
 
-                        ClusterGraph.AddClusterGraph(excelPackage,worksheet);
-                        ChangeGraph.AddChangeGraph(excelPackage,worksheet);
-                        Linegraph.InsertLineGraph(excelPackage,worksheet);
-                        Top20Table.AddTables(excelPackage,worksheet);
-                        Top10Table.AddTables(excelPackage,worksheet);
-                        Top20Percent.AddTables(excelPackage,worksheet);
+                            ClusterGraph.AddClusterGraph(excelPackage,worksheet);
+                            ChangeGraph.AddChangeGraph(excelPackage,worksheet);
+                            Linegraph.InsertLineGraph(excelPackage,worksheet);
+                            Top20Table.AddTables(excelPackage,worksheet);
+                            Top10Table.AddTables(excelPackage,worksheet);
+                            Top20Percent.AddTables(excelPackage,worksheet);
 
-                        // write the XLSX file to disk
-                        var xlFile = new FileInfo(file.FullName.Replace(".csv",".xlsx"));
-                        excelPackage.SaveAs(xlFile);
+                            // write the XLSX file to disk
+                            var xlFile = new FileInfo(file.FullName.Replace(".csv",".xlsx"));
+                            excelPackage.SaveAs(xlFile);
+                        }
                     }
                 }
             

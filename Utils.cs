@@ -16,23 +16,58 @@ namespace mbr
         public const int chartHeight = 800;
         public const int chartWidth = 1000;
         public const int defaultFontSize =9;
+        
+        static StringComparison ignoreCase = StringComparison.CurrentCultureIgnoreCase;
+        
+        // Use these strings to detect what a valid file is
+        static string serviceFile = "Service";
+        static string linkedAccountFile = "Linked Account";
+        // Use these strings to exclude certain rows from during reading
+        static string lineExclude1 = "Service Total";
+        static string lineExclude2 = "Linked Account Total";
+        static string lineExclude3 = "Linked Account ID";
+
+        // Use these strings to remove rows from 
         public static CSVList ReadCSV(string fileName)
         {
             
+
             var output = new CSVList();
             Console.WriteLine($"Processing CSV {fileName}");
             using (var streamReader = new StreamReader(fileName))
+            {
+                //check that file is a CSV that can be dealt with
+                var firstline = streamReader.ReadLine();
+
+                //check the first word? Service or Linked Account is good.
+                if (firstline.StartsWith(serviceFile,ignoreCase)||(firstline.StartsWith(linkedAccountFile,ignoreCase)))
                 {
-                    while (!streamReader.EndOfStream)
-                    {
-                        var line = streamReader.ReadLine();
-                        if ((!line.StartsWith("Service Total",StringComparison.CurrentCultureIgnoreCase)) && (!line.StartsWith("LinkedAccount Total",StringComparison.CurrentCultureIgnoreCase)))
-                        {
-                            output.Content.Add(line.Replace("($)",""));
-                            output.rows = (line.Split(",")).Length;
-                        }
-                    }   
+                    //it's good - reset the streamReader position
+                    streamReader.BaseStream.Position=0;
+                    streamReader.DiscardBufferedData();
+
+                } else
+                {
+                    //it's bad - return the output as empty 
+                    System.Console.WriteLine($"Going to skip {fileName}");
+                    output.columns =0;
+                    output.rows = 0;
+                    return output;
                 }
+
+
+                
+                    
+                while (!streamReader.EndOfStream)
+                {
+                    var line = streamReader.ReadLine();
+                    if ((!line.StartsWith(lineExclude1,ignoreCase)) && (!line.StartsWith(lineExclude2,ignoreCase)) && (!line.StartsWith(lineExclude3,ignoreCase)))
+                    {
+                        output.Content.Add(line.Replace("($)",""));
+                        output.rows = (line.Split(",")).Length;
+                    }
+                }   
+            }
             output.columns = output.Content.Count;
             return output;
         }
@@ -76,7 +111,9 @@ namespace mbr
                 if (String.Equals(serviceName, "Total cost") || (String.Equals(serviceName,"Premium Support"))|| (String.Equals(serviceName,"Tax"))||(String.Equals(serviceName,"Refund")))
                 {
                     worksheet.DeleteRow(i);
+                    
                 }
+                
             }
 
             // sort the $ values - the range is from B2 -> the bottom corner of the sheet
