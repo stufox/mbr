@@ -69,6 +69,7 @@ namespace mbr
                 }   
             }
             output.columns = output.Content.Count;
+            
             return output;
         }
         public static void TransposeAndClean(ExcelPackage excelPackage, string sheetName, CSVList csvData)
