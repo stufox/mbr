@@ -4,5 +4,6 @@ phases:
   runtime-versions:
    dotnet: 2.2
  build:
-  - dotnet restore
-  - dotnet build
+  commands:
+   - dotnet restore
+   - dotnet build
