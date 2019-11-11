@@ -3,3 +3,6 @@ phases:
  install:
   runtime-versions:
    dotnet: 2.2
+ build:
+  - dotnet restore
+  - dotnet build
